@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Money Counter</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script
+            defer
+            src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+        ></script>
+    </head>
+    <body class="bg-gray-100 font-sans">
+        <div
+            class="flex justify-center items-center h-screen"
+            x-data="moneyCounter()"
+        >
+            <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+                <h1 class="text-2xl font-bold mb-4">Money Counter</h1>
+                <div class="grid grid-cols-3 gap-8 mb-4">
+                    <template
+                        x-for="(denomination, index) in denominations"
+                        :key="index"
+                    >
+                        <div>
+                            <label
+                                :for="`count-${denomination.value}`"
+                                class="block text-sm font-medium italic text-gray-400 mb-1"
+                                x-text="`${denomination.value}`"
+                            ></label>
+                            <input
+                                :id="`count-${denomination.value}`"
+                                type="number"
+                                min="0"
+                                class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                x-model="denomination.count"
+                            />
+                        </div>
+                    </template>
+                </div>
+                <div class="flex justify-between items-center">
+                    <p
+                        class="text-lg font-bold"
+                        x-text="`Total: ${totalAmount.toFixed(2)}`"
+                    ></p>
+                    <button
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded"
+                        @click="copyToClipboard"
+                    >
+                        Copy to Clipboard
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function moneyCounter() {
+                return {
+                    denominations: [
+                        { value: 500, count: 0 },
+                        { value: 200, count: 0 },
+                        { value: 100, count: 0 },
+                        { value: 50, count: 0 },
+                        { value: 20, count: 0 },
+                        { value: 10, count: 0 },
+                        { value: 5, count: 0 },
+                        { value: 2, count: 0 },
+                        { value: 1, count: 0 },
+                        { value: 0.5, count: 0 },
+                        { value: 0.2, count: 0 },
+                        { value: 0.1, count: 0 },
+                        { value: 0.05, count: 0 },
+                        { value: 0.02, count: 0 },
+                        { value: 0.01, count: 0 },
+                    ],
+                    get totalAmount() {
+                        return this.denominations.reduce(
+                            (total, denomination) =>
+                                total + denomination.value * denomination.count,
+                            0,
+                        );
+                    },
+                    copyToClipboard() {
+                        navigator.clipboard.writeText(
+                            this.totalAmount.toFixed(2),
+                        );
+                        alert("Total amount copied to clipboard!");
+                    },
+                };
+            }
+        </script>
+    </body>
+</html>
